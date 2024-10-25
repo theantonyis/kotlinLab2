@@ -23,56 +23,68 @@ fun main() {
 
     val traders = listOf(raoul, mario, alan, brian)
 
-    val allTransactions2011 = transactions.filter { it.year == 2011 }.sortedBy { it.value }
+    val filterTransactions = transactions.filter { it.year == 2011 }.sortedBy { it.value }
+    val allTransactions2011 = filterTransactions.map { transaction ->
+        "Year: ${transaction.year}, Value: ${transaction.value} ${transaction.currency}"
+    }.joinToString(" | ")
 
-    println(allTransactions2011)
+    println(allTransactions2011 + "\n")
 //-----------------------------------------
 
     val uniqueCities = traders.map { it.city }.distinct()
 
-    println(uniqueCities)
+    println("Унікальні міста: $uniqueCities \n")
 
 //-----------------------------------------
 
     val cambridgeTraders = traders.filter { it.city == "Cambridge" }.sortedBy { it.name }
+    .map { "Trader: ${it.name}, City: ${it.city}" }
 
-    println(cambridgeTraders)
+    println(cambridgeTraders.joinToString(" | ") + "\n")
 
 //-----------------------------------------
 
     val traderNames = traders.map { it.name }.sorted().joinToString(", ")
 
-    println(traderNames)
+    println("Всі імена трейдерів: $traderNames \n")
 
 //-----------------------------------------
 
     val hasTradersInMilan = traders.any { it.city == "Milan" }
 
-    println("Are there traders in Milan? $hasTradersInMilan")
+    println("Чи є трейдери в Мілані? $hasTradersInMilan \n")
 
 //-----------------------------------------
 
-        val transactionValuesInCambridge = transactions.filter { it.trader.city == "Cambridge" }.map { it.value }
+    val transactionValuesInCambridge = transactions.filter { it.trader.city == "Cambridge" }
+    .map { "Trader: ${it.trader.name}, City: ${it.trader.city}, Value: ${it.value} ${it.currency}" }
 
-        println(transactionValuesInCambridge)
+    println(transactionValuesInCambridge.joinToString(" | ") + "\n")
 
 //-----------------------------------------
 
-        val highestTransactionValue = transactions.maxByOrNull { it.value }
+    val highestTransactionValue = transactions.maxByOrNull { it.value }
 
-        println(highestTransactionValue)
+    if (highestTransactionValue != null) {
+        println("Trader: ${highestTransactionValue.trader.name}, City: ${highestTransactionValue.trader.city}, Value: ${highestTransactionValue.value} ${highestTransactionValue.currency}")
+    }
 
 //-----------------------------------------
 
     val transactionsByCurrency = transactions.groupBy { it.currency }
 
-    println(transactionsByCurrency)
+    transactionsByCurrency.forEach { (currency, transactions) ->
+        println("\nCurrency: $currency")
+        transactions.forEach { transaction ->
+            println("Trader: ${transaction.trader.name}, Year: ${transaction.year}, Month: ${transaction.month}, Value: ${transaction.value} ${transaction.currency}")
+        }
+    }
 
 //-----------------------------------------
 
     val transactionsInUAH = transactions.filter { it.currency == UAH }.sumOf { it.value }
 
-    println(transactionsInUAH)
+    println("\nСума транзакцій в гривнях - $transactionsInUAH \n")
 
 //-----------------------------------------
 
